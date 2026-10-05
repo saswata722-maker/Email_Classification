@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -5,7 +7,8 @@ from xgboost import XGBClassifier
 from sklearn.pipeline import make_pipeline
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, f1_score
 
-path = r"C:\Users\saswa\OneDrive\Desktop\proj\datasets\spam_ham_dataset.csv\spam_ham_dataset.csv"
+# Load dataset (data/spam_ham_dataset.csv next to this script; see data/README.md)
+path = Path(__file__).resolve().parent / "data" / "spam_ham_dataset.csv"
 df = pd.read_csv(path)
 
 if "text" in df.columns:
