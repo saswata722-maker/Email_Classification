@@ -65,5 +65,6 @@ models/
 *.zip
 *.tar.gz
 *.parquet
-# Allow documentation in data folder
+# Allow documentation and the default dataset in data folder
 !data/README.md
+!data/spam_ham_dataset.csv

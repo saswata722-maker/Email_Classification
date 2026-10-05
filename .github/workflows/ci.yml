@@ -28,4 +28,4 @@ jobs:
 
     - name: Lint and syntax check
       run: |
-        python -m py_compile Email_logistic_regression.py
+        python -m py_compile Email_logistic_regression.py Email_naive_bayes.py Email_random_forest.py Email_SVM.py Email_xgboost.py
