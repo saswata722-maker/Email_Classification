@@ -40,7 +40,11 @@ An end-to-end, high-performance Machine Learning pipeline for classifying emails
 │   └── README.md                    # Dataset instructions & format guide
 ├── .gitattributes                   # Git LF line-ending normalization
 ├── .gitignore                       # Ignored files (models, virtualenvs, datasets)
-├── Email_logistic_regression.py     # Main training, evaluation & inference script
+├── Email_logistic_regression.py     # Logistic Regression training, evaluation & inference
+├── Email_naive_bayes.py           # Naive Bayes training & evaluation
+├── Email_random_forest.py         # Random Forest training & evaluation
+├── Email_SVM.py                   # SVM (LinearSVC) training & evaluation
+├── Email_xgboost.py               # XGBoost training & evaluation
 ├── LICENSE                          # MIT Open Source License
 ├── README.md                        # Project documentation
 └── requirements.txt                 # Python package dependencies
@@ -105,16 +109,20 @@ The script will:
 
 ---
 
-## 🤝 Contributing
+## 📊 Model Comparison
 
-Contributions, issues, and feature requests are welcome!
-Feel free to open an issue or submit a pull request.
+All five models were run on the same dataset (4993 samples — 3531 Ham / 1462 Spam, 80/20 stratified split, `random_state=42`) with identical TF-IDF settings. Results below are the live outputs of each script:
 
-1. Fork the Project
-2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the Branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+| Model | Script | Accuracy | F1 (Spam) | F1 (Ham) | F1 (Macro) | F1 (Weighted) |
+|---|---|---|---|---|---|---|
+| Logistic Regression | `Email_logistic_regression.py` | 0.9670 (96.70%) | 0.9467 | 0.9761 | 0.9614 | 0.9675 |
+| Naive Bayes (MultinomialNB) | `Email_naive_bayes.py` | 0.9680 (96.80%) | 0.9472 | 0.9770 | 0.9621 | 0.9683 |
+| Random Forest | `Email_random_forest.py` | 0.9680 (96.80%) | 0.9481 | 0.9768 | 0.9624 | 0.9684 |
+| XGBoost | `Email_xgboost.py` | 0.9690 (96.90%) | 0.9484 | 0.9778 | 0.9631 | 0.9692 |
+| SVM (LinearSVC) | `Email_SVM.py` | **0.9890 (98.90%)** | **0.9815** | **0.9922** | **0.9868** | **0.9890** |
+
+> 🏆 **Best model: SVM (LinearSVC)** — highest accuracy and highest F1 across all averages.
+> Reproduce with: `python Email_logistic_regression.py`, `python Email_naive_bayes.py`, `python Email_random_forest.py`, `python Email_xgboost.py`, `python Email_SVM.py`
 
 ---
 
