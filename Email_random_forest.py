@@ -1,3 +1,5 @@
+from pathlib import Path
+
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -5,25 +7,26 @@ from sklearn.pipeline import make_pipeline
 from sklearn.metrics import accuracy_score, classification_report, confusion_matrix, f1_score
 from sklearn.ensemble import RandomForestClassifier
 
-path = r"C:\Users\saswa\OneDrive\Desktop\proj\datasets\spam_ham_dataset.csv\spam_ham_dataset.csv"
+# Load dataset (data/spam_ham_dataset.csv next to this script; see data/README.md)
+path = Path(__file__).resolve().parent / "data" / "spam_ham_dataset.csv"
 
 df = pd.read_csv(path)
 
 if "text" in df.columns:
     df['text'] = df['text'].fillna("").astype(str).str.strip()
 else:
-    subj = df["subject"].fillna("") if "Subject" in df.columns else ""
-    msg = df["message"].fillna("") if "Message" in df.columns else ""
-    df["text"] = (subj + "" + msg).str.strip()
+    subj = df["Subject"].fillna("") if "Subject" in df.columns else ""
+    msg = df["Message"].fillna("") if "Message" in df.columns else ""
+    df["text"] = (subj + " " + msg).str.strip()
     
 df = df[df["text"] != ""].drop_duplicates(subset=["text"])
 
 if "label_num" in df.columns:
     df["label"] = df["label_num"].astype(int)
 else:
-    label_cols = "Spam/Ham" if "Spam/Ham" in df.columns else "labels"
-    label_map = {"ham": 0, "spam": 1 , "0":0, "1":1}
-    df["label"]=df[label_cols].astype(str).str.strip('"\'').str.lower().map(label_map)
+    label_col = "Spam/Ham" if "Spam/Ham" in df.columns else "label"
+    label_map = {"ham": 0, "spam": 1, "0": 0, "1": 1}
+    df["label"] = df[label_col].astype(str).str.strip().str.strip('"\'').str.lower().map(label_map)
 
 df=df.dropna(subset=["label"])
 
