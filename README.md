@@ -1,32 +1,32 @@
-# 📧 Email Spam Classifier (TF-IDF & Logistic Regression)
+# 📧 Email Spam Classifier (TF-IDF + Classical ML Models)
 
 [![Python](https://img.shields.io/badge/Python-3.9%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
 [![scikit-learn](https://img.shields.io/badge/scikit--learn-F7931E?style=for-the-badge&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)](CONTRIBUTING.md)
 
-An end-to-end, high-performance Machine Learning pipeline for classifying emails as **Spam** or **Ham** (legitimate). Powered by **TF-IDF Vectorization** (with sublinear term frequency scaling and bi-grams) and **Balanced Logistic Regression**, this model delivers fast training and high precision/recall on imbalanced email corpora like the Enron Spam Dataset.
+An end-to-end Machine Learning comparison for classifying emails as **Spam** or **Ham** (legitimate). Five TF-IDF pipelines (Logistic Regression, Naive Bayes, Random Forest, SVM, XGBoost) are trained and evaluated on the Spam Mails Dataset (`spam_ham_dataset.csv`), with a shared 80/20 stratified split so results are directly comparable.
 
 ---
 
 ## 🚀 Key Features
 
-- **Robust Text Preprocessing**: Combines subject lines and message bodies, cleans whitespace, strips quotes, and removes duplicate messages.
-- **Advanced TF-IDF Vectorization**:
+- **Robust Text Preprocessing**: Uses the `text` column directly (falls back to combining Subject + Message for Enron-style files), cleans whitespace, strips quotes, and removes exact-duplicate messages.
+- **Advanced TF-IDF Vectorization** (shared by all five models):
   - Word unigrams and bigrams (`ngram_range=(1, 2)`)
   - Sublinear term frequency scaling (`sublinear_tf=True`)
   - English stop-words filtering and `min_df=2`
   - Vocabulary capped at `50,000` features to balance vocabulary depth and memory efficiency
-- **Class-Balanced Logistic Regression**:
-  - Automatically adjusts weights inversely proportional to class frequencies (`class_weight="balanced"`).
-  - High iteration convergence limit (`max_iter=2000`).
+- **Five Classifiers** (same split, `random_state=42`):
+  - Logistic Regression (`class_weight="balanced"`, `max_iter=2000`)
+  - Multinomial Naive Bayes (`alpha=0.1`)
+  - Random Forest (`n_estimators=300`, `class_weight="balanced"`)
+  - Linear SVM (`LinearSVC`, `C=1.0`, `class_weight="balanced"`)
+  - XGBoost (`n_estimators=300`, `max_depth=6`, `learning_rate=0.1`)
 - **Comprehensive Evaluation Suite**:
   - Accuracy, Spam F1, Ham F1, Macro F1, and Weighted F1.
   - Formatted 2x2 Confusion Matrix breakdown (TN, FP, FN, TP).
   - Detailed Precision, Recall, and F1 classification report per class.
-- **Model Serialization & CLI Inference**:
-  - Save trained pipelines with `joblib` for deployment.
-  - Test custom email messages directly from the command line.
 
 ---
 
@@ -81,30 +81,31 @@ pip install -r requirements.txt
 
 ## 📊 Dataset Setup
 
-Place your dataset CSV in the `data/` directory as `data/enron_spam_data.csv`, or specify a custom path with `--data-path`.
+Place the dataset CSV in the `data/` directory as `data/spam_ham_dataset.csv` (see [`data/README.md`](data/README.md)). The scripts load it via a path relative to the repo (`Path(__file__).parent / "data" / "spam_ham_dataset.csv"`), so no absolute-path editing is needed.
 
-The CSV file must contain the following columns:
-- **`Subject`**: Subject line of the email
-- **`Message`** (or `text`): Body text of the email
-- **`Spam/Ham`** (or `label`): Label values (`spam` / `ham` or `1` / `0`)
+The default dataset is the [Spam Mails Dataset (venky73)](https://www.kaggle.com/datasets/venky73/spam-mails-dataset): 5,171 rows (3,672 Ham / 1,499 Spam; ~4,993 after exact-duplicate removal), with columns `text`, `label` (`ham`/`spam`) and `label_num` (`0`/`1`).
 
-> 💡 **Dataset Download**: You can get the Enron Spam dataset from [Kaggle](https://www.kaggle.com/) or public machine learning dataset repositories.
+The scripts also accept Enron-style files with `Subject` + `Message` text columns and a `Spam/Ham` (or `label`) label column.
 
 ---
 
 ## 💻 Usage
 
-Run the training and evaluation script directly:
+Run any of the five training/evaluation scripts (each needs `data/spam_ham_dataset.csv` in place):
 ```bash
 python Email_logistic_regression.py
+python Email_naive_bayes.py
+python Email_random_forest.py
+python Email_SVM.py
+python Email_xgboost.py
 ```
 
-The script will:
-1. Load the Enron email dataset.
-2. Preprocess text (combine Subject & Message, remove empty entries, drop duplicates).
+Each script will:
+1. Load `data/spam_ham_dataset.csv`.
+2. Preprocess text (use `text`, or combine Subject & Message for Enron-style files; remove empty entries, drop exact duplicates).
 3. Encode labels (`ham` $\rightarrow$ 0, `spam` $\rightarrow$ 1).
-4. Perform an 80/20 stratified train/test split.
-5. Train a TF-IDF + Logistic Regression pipeline.
+4. Perform an 80/20 stratified train/test split (`random_state=42`).
+5. Train its TF-IDF + classifier pipeline.
 6. Print comprehensive evaluation metrics (Accuracy, F1-Scores, Confusion Matrix, Classification Report).
 
 ---
@@ -123,6 +124,8 @@ All five models were run on the same dataset (4993 samples — 3531 Ham / 1462 S
 
 > 🏆 **Best model: SVM (LinearSVC)** — highest accuracy and highest F1 across all averages.
 > Reproduce with: `python Email_logistic_regression.py`, `python Email_naive_bayes.py`, `python Email_random_forest.py`, `python Email_xgboost.py`, `python Email_SVM.py`
+>
+> ⚠️ **Leakage caveat**: only *exact*-duplicate texts are removed, so *near*-duplicate emails can still appear in both train and test splits, which may inflate scores (SVM's 98.9% especially). Treat these numbers as optimistic until validated with grouped/de-duplicated splits.
 
 ---
 

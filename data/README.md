@@ -10,7 +10,7 @@ For real-world accuracy without duplicate text bias, we recommend the **Spam Mai
 
 * **Source**: [Kaggle: Spam Mails Dataset (by venky73)](https://www.kaggle.com/datasets/venky73/spam-mails-dataset)
 * **File Name**: `spam_ham_dataset.csv`
-* **Total Samples**: 5,172 emails (3,672 Ham, 1,499 Spam — ~4,993 after deduplication)
+* **Total Samples**: 5,171 emails (3,672 Ham, 1,499 Spam — ~4,993 after deduplication)
 * **Columns**:
   | Column | Type | Description |
   | :--- | :--- | :--- |
@@ -37,16 +37,12 @@ The training pipeline in [`Email_logistic_regression.py`](../Email_logistic_regr
 ## 🚀 How to Set Up Your Dataset
 
 1. Download [`spam_ham_dataset.csv`](https://www.kaggle.com/datasets/venky73/spam-mails-dataset) from Kaggle.
-2. Place the CSV file into this `data/` folder:
+2. Place the CSV file into this `data/` folder (the scripts load it automatically — no path editing needed):
    ```text
    data/
    └── spam_ham_dataset.csv
    ```
-3. Update the `path` variable in [`Email_logistic_regression.py`](../Email_logistic_regression.py):
-   ```python
-   path = r"data/spam_ham_dataset.csv"
-   ```
-4. Run the script:
+3. Run any script, e.g.:
    ```bash
    python Email_logistic_regression.py
    ```
