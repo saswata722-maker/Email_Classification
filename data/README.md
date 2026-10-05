@@ -22,7 +22,7 @@ For real-world accuracy without duplicate text bias, we recommend the **Spam Mai
 
 ## 📂 Supported Dataset Schemas
 
-The training pipeline in [`Email_logistic_regression.py`](../Email_logistic_regression.py) automatically detects and handles multiple CSV column formats:
+All five training scripts automatically detect and handle multiple CSV column formats:
 
 ### Format A: Unified Text Column *(e.g. `spam_ham_dataset.csv`)*
 * **Text**: `text`

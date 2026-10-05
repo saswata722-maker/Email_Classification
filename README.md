@@ -81,9 +81,9 @@ pip install -r requirements.txt
 
 ## 📊 Dataset Setup
 
-Place the dataset CSV in the `data/` directory as `data/spam_ham_dataset.csv` (see [`data/README.md`](data/README.md)). The scripts load it via a path relative to the repo (`Path(__file__).parent / "data" / "spam_ham_dataset.csv"`), so no absolute-path editing is needed.
+Download [`spam_ham_dataset.csv` from Kaggle (Spam Mails Dataset by venky73)](https://www.kaggle.com/datasets/venky73/spam-mails-dataset) and place it in the `data/` directory as `data/spam_ham_dataset.csv` (see [`data/README.md`](data/README.md)). The file is git-ignored, so each user downloads it locally. The scripts load it via a path relative to the repo (`Path(__file__).parent / "data" / "spam_ham_dataset.csv"`), so no absolute-path editing is needed.
 
-The default dataset is the [Spam Mails Dataset (venky73)](https://www.kaggle.com/datasets/venky73/spam-mails-dataset): 5,171 rows (3,672 Ham / 1,499 Spam; ~4,993 after exact-duplicate removal), with columns `text`, `label` (`ham`/`spam`) and `label_num` (`0`/`1`).
+The dataset has 5,171 rows (3,672 Ham / 1,499 Spam; ~4,993 after exact-duplicate removal), with columns `text`, `label` (`ham`/`spam`) and `label_num` (`0`/`1`).
 
 The scripts also accept Enron-style files with `Subject` + `Message` text columns and a `Spam/Ham` (or `label`) label column.
 
